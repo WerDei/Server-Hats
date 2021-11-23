@@ -22,12 +22,12 @@ public class VanillaHats implements ModInitializer
     @Override
     public void onInitialize()
     {
+        Config.load();
+        Config.save();
     }
 
     public static void assignEquipmentSlots()
     {
-        Config.load();
-        Config.save();
         modifiedItemCount = 0;
         List.of(Config.get.hatItems).forEach( string ->
         {
