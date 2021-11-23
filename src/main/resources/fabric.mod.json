@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "vanillahats",
+  "version": "${version}",
+  "name": "Vanilla Hats",
+  "description": "",
+  "authors": [
+    "WerDei"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/vanillahats/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.werdei.vanillahats.VanillaHats"
+    ]
+  },
+  "mixins": [
+    "vanillahats.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.5",
+    "fabric": "*",
+    "minecraft": "1.17.1"
+  }
+}
