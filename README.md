@@ -64,4 +64,4 @@ Feel free to change it up to your own liking!
 ### Known issues
 
 * While in multiplayer, players in creative mode cannot equip items to a helmet slot
-* When nothing is equpped in the head slot, shift-clicking an item equips it. That might get annoying if you're trying to keep your head empty
+* When nothing is equipped in the head slot, shift-clicking an item equips it. That might get annoying if you're trying to keep your head empty
