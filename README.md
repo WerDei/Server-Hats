@@ -6,7 +6,7 @@ To equip an allowed item, simply put it in the helmet slot - no commands necessa
 Requires Fabric API
 
 ### Configuration
-After loading the mod, open up the `vanillahats.json` file in the `config\` folder. You will see something like this:
+After loading the mod, open up the `serverhats.json` file in the `config\` folder. You will see something like this:
 
 ```
 {
