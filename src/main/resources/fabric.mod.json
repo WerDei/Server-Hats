@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "vanillahats",
+  "id": "server-hats",
   "version": "${version}",
-  "name": "Vanilla Hats",
+  "name": "Server Hats",
   "description": "",
   "authors": [
     "WerDei"
@@ -13,11 +13,11 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.werdei.vanillahats.VanillaHats"
+      "net.werdei.vanillahats.ServerHats"
     ]
   },
   "mixins": [
-    "vanillahats.mixins.json"
+    "server-hats.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.11.6",

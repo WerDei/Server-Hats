@@ -8,13 +8,11 @@ import java.io.*;
 
 public class Config
 {
-    private static File file = new File(FabricLoader.getInstance().getConfigDir().toFile(), "vanillahats.json");
+    private static File file = new File(FabricLoader.getInstance().getConfigDir().toFile(), "serverhats.json");
     public static Config get;
 
-    public String[] hatItems = new String[]{
+    public String[] allowedItems = new String[]{
             "#banners",
-            "#fence_gates",
-
             "feather",
             "end_rod",
             "lightning_rod",
@@ -58,8 +56,8 @@ public class Config
 
         get = new Config();
         if (loaded == null) return;
-        if (loaded.hatItems != null)
-            get.hatItems = loaded.hatItems;
+        if (loaded.allowedItems != null)
+            get.allowedItems = loaded.allowedItems;
     }
 
     public static void save()

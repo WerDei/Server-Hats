@@ -13,10 +13,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-public class VanillaHats implements ModInitializer
+public class ServerHats implements ModInitializer
 {
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final String LOG_PREFIX = "[VanillaHats]: ";
+    private static final String LOG_PREFIX = "[ServerHats]: ";
     private static int modifiedItemCount = 0;
 
     @Override
@@ -29,7 +29,7 @@ public class VanillaHats implements ModInitializer
     public static void assignEquipmentSlots()
     {
         modifiedItemCount = 0;
-        List.of(Config.get.hatItems).forEach( string ->
+        List.of(Config.get.allowedItems).forEach( string ->
         {
             StringReader reader = new StringReader(string);
             try
@@ -41,7 +41,7 @@ public class VanillaHats implements ModInitializer
                     Tag<Item> tag = ServerTagManagerHolder.getTagManager().getTag(Registry.ITEM_KEY, id, (identifier) ->
                             new RuntimeException("Unknown item tag '" + identifier + "'"));
 
-                    tag.values().forEach(VanillaHats::assignSlotTo);
+                    tag.values().forEach(ServerHats::assignSlotTo);
                 }
                 else
                 {

@@ -1,4 +1,4 @@
-# Vanilla-Hats
+# Server Hats
 Server-side Fabric mod that allows players equip items as hats.
 
 To equip an allowed item, simply put it in the helmet slot - no commands necessary!
@@ -10,9 +10,8 @@ After loading the mod, open up the `vanillahats.json` file in the `config\` fold
 
 ```
 {
-  "hatItems": [
+  "allowedItems": [
     "#banners",
-    "#fence_gates",
     "feather",
     ...
     ...
@@ -24,11 +23,9 @@ After loading the mod, open up the `vanillahats.json` file in the `config\` fold
 
 You can add any item IDs and item tags to this list, and after a restart players will be able to euip these items in a head slot.
 
-By default it includes items that have special rendering rules in vanilla Minecraft:
+By default, it includes items that have special rendering rules in vanilla Minecraft:
 ```
 "#banners",
-"#fence_gates",
-
 "feather",
 "end_rod",
 "lightning_rod",
@@ -48,6 +45,7 @@ By default it includes items that have special rendering rules in vanilla Minecr
 "crimson_fence_gate",
 "warped_fence_gate",
 ```
+
 And some other ones I thought looked cool\funny:
 ```
 "azalea",
@@ -66,4 +64,3 @@ Feel free to change it up to your own liking!
 ### Known issues
 
 * While in multiplayer, players in creative mode cannot equip items to a helmet slot
-* When nothing is equipped in the head slot, shift-clicking an item equips it. That might get annoying if you're trying to keep your head empty
