@@ -3,6 +3,8 @@ Server-side Fabric mod that allows players equip items as hats.
 
 To equip an allowed item, simply put it in the helmet slot - no commands necessary!
 
+Requires Fabric API
+
 ### Configuration
 After loading the mod, open up the `vanillahats.json` file in the `config\` folder. You will see something like this:
 
