@@ -1,17 +1,10 @@
 package net.werdei.vanillahats;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import net.fabricmc.loader.api.FabricLoader;
-
-import java.io.*;
-
 public class Config
 {
-    private static File file = new File(FabricLoader.getInstance().getConfigDir().toFile(), "serverhats.json");
-    public static Config get;
+    public static boolean allowAllItems = false;
 
-    public String[] allowedItems = new String[]{
+    public static String[] allowedItems = new String[]{
             "#banners",
             "feather",
             "end_rod",
@@ -43,35 +36,4 @@ public class Config
             "glass",
             "tinted_glass",
     };
-
-    public static void load()
-    {
-        Gson gson = new Gson();
-        Config loaded = null;
-        try
-        {
-            loaded = gson.fromJson(new FileReader(file), Config.class);
-        }
-        catch (FileNotFoundException ignored) {}
-
-        get = new Config();
-        if (loaded == null) return;
-        if (loaded.allowedItems != null)
-            get.allowedItems = loaded.allowedItems;
-    }
-
-    public static void save()
-    {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        try
-        {
-            FileWriter writer = new FileWriter(file);
-            writer.write(gson.toJson(get));
-            writer.close();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
 }

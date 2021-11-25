@@ -8,6 +8,7 @@ import net.minecraft.tag.ServerTagManagerHolder;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.werdei.config.ConfigLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,19 +18,36 @@ public class ServerHats implements ModInitializer
 {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String LOG_PREFIX = "[ServerHats]: ";
-    private static int modifiedItemCount = 0;
+    private static final String CONFIG_FILE_NAME = "serverhats.json";
+    private static int modifiedItemCount = -1;
 
     @Override
     public void onInitialize()
     {
-        Config.load();
-        Config.save();
+        ConfigLoader.load(Config.class, CONFIG_FILE_NAME);
+        ConfigLoader.save(Config.class, CONFIG_FILE_NAME);
     }
 
     public static void assignEquipmentSlots()
     {
+        if (modifiedItemCount >= 0) return;
+
         modifiedItemCount = 0;
-        List.of(Config.get.allowedItems).forEach( string ->
+        if (Config.allowAllItems)
+            assignSlotsToAllItems();
+        else
+            assignSlotsToListedItems();
+        log("Successfully added ability to equip " + modifiedItemCount + " items");
+    }
+
+    private static void assignSlotsToAllItems()
+    {
+        Registry.ITEM.forEach(ServerHats::assignSlotTo);
+    }
+
+    private static void assignSlotsToListedItems()
+    {
+        List.of(Config.allowedItems).forEach(string ->
         {
             StringReader reader = new StringReader(string);
             try
@@ -57,8 +75,6 @@ public class ServerHats implements ModInitializer
                 warn("Error modifying \"" + string + "\": " + e.getMessage());
             }
         });
-
-        log("Successfully added ability to equip " + modifiedItemCount + " items");
     }
 
     private static void assignSlotTo(Item item)
