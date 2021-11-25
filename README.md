@@ -1,25 +1,21 @@
 # Server Hats
-Server-side Fabric mod that allows players equip items as hats.
-
-To equip an allowed item, simply put it in the helmet slot - no commands necessary!
-
-Requires Fabric API
+Server-side Fabric mod that allows players equip items as hats.  
+To equip an allowed item, simply put it in the helmet slot - no commands necessary!  
+Requires Fabric API  
 
 ## Configuration
 After loading the mod once, open up the `serverhats.json` file in the `config\` folder. You will see a few parameters:
 
 ### "allowAllItems"
-
 A boolean value. When set to `true`, allows any item to be equipped to a head slot.
 
-By default, it is set to `false`.
+By default, it is set to `false`.  
 
 ### "allowedItems"
-A list of items that are allowed to be equipped in a head slot. Ignored when "allowAllItems" is set to `true`.
+A list of items that are allowed to be equipped in a head slot. Ignored when "allowAllItems" is set to `true`.  
+Can contain any item IDs and item tags.
 
-Can contain any item IDs and item tags. 
-
-By default, it includes some items that have special rendering rules in vanilla Minecraft:
+By default, it includes some items that have special rendering rules in vanilla Minecraft:  
 ```
 "#banners",
 "feather",
@@ -56,5 +52,4 @@ And some other ones I thought looked cool\funny:
 ```
 
 ## Known issues
-
 * While in multiplayer, players in creative mode cannot equip items to a helmet slot
