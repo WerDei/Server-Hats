@@ -36,4 +36,6 @@ public class Config
             "glass",
             "tinted_glass",
     };
+
+    public static boolean shiftClickEquipping = false;
 }

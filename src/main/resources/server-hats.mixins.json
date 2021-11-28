@@ -4,7 +4,8 @@
   "package": "net.werdei.vanillahats.mixins",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "MinecraftServerMixin"
+    "MinecraftServerMixin",
+    "PlayerScreenHandlerMixin"
   ],
   "client": [
   ],

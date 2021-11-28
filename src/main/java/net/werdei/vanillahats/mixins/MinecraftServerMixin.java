@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MinecraftServerMixin
 {
     @Inject(method = "runServer()V", at = @At("HEAD"))
-    public void serverRan(CallbackInfo callbackInfo)
+    public void onRunServer(CallbackInfo callbackInfo)
     {
         ServerHats.assignEquipmentSlots();
     }

@@ -3,7 +3,10 @@ package net.werdei.vanillahats;
 import com.mojang.brigadier.StringReader;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.impl.item.ItemExtensions;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tag.ServerTagManagerHolder;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
@@ -12,14 +15,17 @@ import net.werdei.config.ConfigLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashSet;
 import java.util.List;
 
+@SuppressWarnings("FieldMayBeFinal")
 public class ServerHats implements ModInitializer
 {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String LOG_PREFIX = "[ServerHats]: ";
     private static final String CONFIG_FILE_NAME = "serverhats.json";
-    private static int modifiedItemCount = -1;
+
+    private static HashSet<Item> assignedItems = null;
 
     @Override
     public void onInitialize()
@@ -30,19 +36,26 @@ public class ServerHats implements ModInitializer
 
     public static void assignEquipmentSlots()
     {
-        if (modifiedItemCount >= 0) return;
+        if (assignedItems != null) return;
 
-        modifiedItemCount = 0;
+        assignedItems = new HashSet<>();
         if (Config.allowAllItems)
             assignSlotsToAllItems();
         else
             assignSlotsToListedItems();
-        log("Successfully added ability to equip " + modifiedItemCount + " items");
+        log("Successfully added ability to equip " + assignedItems.size() + " items");
     }
 
     private static void assignSlotsToAllItems()
     {
-        Registry.ITEM.forEach(ServerHats::assignSlotTo);
+        Registry.ITEM.forEach(item ->
+        {
+            try
+            {
+                assignSlotTo(item);
+            }
+            catch (RuntimeException ignored) {}
+        });
     }
 
     private static void assignSlotsToListedItems()
@@ -79,8 +92,16 @@ public class ServerHats implements ModInitializer
 
     private static void assignSlotTo(Item item)
     {
+        EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(new ItemStack(item));
+        if (equipmentSlot != EquipmentSlot.MAINHAND)
+            throw new RuntimeException("Item already assigned to equipment slot \"" + equipmentSlot.getName() + "\"");
         ((ItemExtensions) item).fabric_setEquipmentSlotProvider(HeadEquipmentSlotProvider.PROVIDER);
-        modifiedItemCount++;
+        assignedItems.add(item);
+    }
+
+    public static boolean isItemSlotAssigned(Item item)
+    {
+        return assignedItems.contains(item);
     }
 
     public static void log(Object message)
