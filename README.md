@@ -4,7 +4,8 @@ To equip an allowed item, simply put it in the helmet slot - no commands necessa
 Requires Fabric API  
 
 ## Configuration
-After loading the mod once, open up the `serverhats.json` file in the `config\` folder. You will see a few parameters:
+After loading the mod once, open up the `serverhats.json` file in the `config\` folder.  
+You will be able to set a few parameters:
 
 ### "allowAllItems"
 A boolean value. When set to `true`, allows any item to be equipped to a head slot.
@@ -12,7 +13,7 @@ A boolean value. When set to `true`, allows any item to be equipped to a head sl
 By default, it is set to `false`.  
 
 ### "allowedItems"
-A list of items that are allowed to be equipped in a head slot. Ignored when "allowAllItems" is set to `true`.  
+A list of items that are allowed to be equipped in a head slot. Ignored when "allowAllItems" is set to `true`.
 Can contain any item IDs and item tags.
 
 By default, it includes some items that have special rendering rules in vanilla Minecraft:  
@@ -50,6 +51,11 @@ And some other ones I thought looked cool\funny:
 "glass",
 "tinted_glass",
 ```
+
+### shiftClickEquipping
+A boolean value. When set to `false`, prevents an allowed item from getting equipped in a head slot when shift-clicking it. 
+
+By default, it is set to `false`.
 
 ## Known issues
 * While in multiplayer, players in creative mode cannot equip items to a helmet slot
