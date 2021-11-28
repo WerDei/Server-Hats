@@ -98,7 +98,8 @@ public class ServerHats implements ModInitializer
         if (equipmentSlot != EquipmentSlot.MAINHAND)
             throw new RuntimeException("Item already assigned to equipment slot \"" + equipmentSlot.getName() + "\"");
         ((ItemExtensions) item).fabric_setEquipmentSlotProvider(HeadEquipmentSlotProvider.PROVIDER);
-        DispenserBlock.registerBehavior(item, ArmorItem.DISPENSER_BEHAVIOR);
+        if (Config.dispenserEquipping)
+            DispenserBlock.registerBehavior(item, ArmorItem.DISPENSER_BEHAVIOR);
         assignedItems.add(item);
     }
 

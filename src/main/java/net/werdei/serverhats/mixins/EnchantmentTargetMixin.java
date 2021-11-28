@@ -1,6 +1,7 @@
 package net.werdei.serverhats.mixins;
 
 import net.minecraft.item.Item;
+import net.werdei.serverhats.Config;
 import net.werdei.serverhats.ServerHats;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,6 +17,7 @@ public class EnchantmentTargetMixin
     @Inject(method = "isAcceptableItem", at = @At("RETURN"), cancellable = true)
     public void isAcceptableItem(Item item, CallbackInfoReturnable<Boolean> cir)
     {
+        if (!Config.enchanting) return;
         cir.setReturnValue(cir.getReturnValue() || ServerHats.isItemSlotAssigned(item));
     }
 }
