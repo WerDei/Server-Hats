@@ -105,6 +105,7 @@ public class ServerHats implements ModInitializer
 
     public static boolean isItemSlotAssigned(Item item)
     {
+        if (assignedItems == null) return false;
         return assignedItems.contains(item);
     }
 

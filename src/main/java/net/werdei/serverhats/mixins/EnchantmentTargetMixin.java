@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 })
 public class EnchantmentTargetMixin
 {
-    @Inject(method = "isAcceptableItem", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "isAcceptableItem(Lnet/minecraft/item/Item;)Z", at = @At("RETURN"), cancellable = true)
     public void isAcceptableItem(Item item, CallbackInfoReturnable<Boolean> cir)
     {
         if (!Config.enchanting) return;
