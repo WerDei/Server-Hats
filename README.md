@@ -6,7 +6,7 @@ Requires Fabric API
 ## Configuration
 The mod is very customizable, making it easy to tune it to your preference.
 
-By default, mod allows to equip some items that have special rendering rules in vanilla Minecraft:
+By default, mod allows players to equip some items that have special rendering rules in vanilla Minecraft:
 * Banners
 * Fence gates
 * Amethyst clusters and buds
@@ -23,7 +23,7 @@ And some other ones I thought looked cool\funny:
 * Slime and honey blocks
 * Composter
 
-You can add/remove any items to/from this list. You can also make it so any item can be equipped!
+You can add/remove any items to/from this list. You can also make it so any item in the game can be used as a hat!
 
 These items can also be equipped to players with a dispenser and can be enchanted with curse enchantments on an anvil (for when you want to test your frienships).
 
