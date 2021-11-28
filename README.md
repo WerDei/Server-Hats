@@ -52,7 +52,7 @@ And some other ones I thought looked cool\funny:
 "tinted_glass",
 ```
 
-### shiftClickEquipping
+### "shiftClickEquipping"
 A boolean value. When set to `false`, prevents an allowed item from getting equipped in a head slot when shift-clicking it. 
 
 By default, it is set to `false`.
