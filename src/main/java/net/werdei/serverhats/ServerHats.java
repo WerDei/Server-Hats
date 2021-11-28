@@ -3,8 +3,10 @@ package net.werdei.serverhats;
 import com.mojang.brigadier.StringReader;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.impl.item.ItemExtensions;
+import net.minecraft.block.DispenserBlock;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tag.ServerTagManagerHolder;
@@ -96,6 +98,7 @@ public class ServerHats implements ModInitializer
         if (equipmentSlot != EquipmentSlot.MAINHAND)
             throw new RuntimeException("Item already assigned to equipment slot \"" + equipmentSlot.getName() + "\"");
         ((ItemExtensions) item).fabric_setEquipmentSlotProvider(HeadEquipmentSlotProvider.PROVIDER);
+        DispenserBlock.registerBehavior(item, ArmorItem.DISPENSER_BEHAVIOR);
         assignedItems.add(item);
     }
 
