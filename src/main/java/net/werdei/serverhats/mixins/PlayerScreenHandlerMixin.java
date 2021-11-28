@@ -1,12 +1,12 @@
-package net.werdei.vanillahats.mixins;
+package net.werdei.serverhats.mixins;
 
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
-import net.werdei.vanillahats.Config;
-import net.werdei.vanillahats.ServerHats;
+import net.werdei.serverhats.Config;
+import net.werdei.serverhats.ServerHats;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

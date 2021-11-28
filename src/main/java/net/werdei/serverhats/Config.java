@@ -1,4 +1,4 @@
-package net.werdei.vanillahats;
+package net.werdei.serverhats;
 
 public class Config
 {

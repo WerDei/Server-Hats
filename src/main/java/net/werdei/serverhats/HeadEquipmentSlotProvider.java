@@ -1,4 +1,4 @@
-package net.werdei.vanillahats;
+package net.werdei.serverhats;
 
 import net.fabricmc.fabric.api.item.v1.EquipmentSlotProvider;
 import net.minecraft.entity.EquipmentSlot;
