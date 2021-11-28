@@ -1,4 +1,4 @@
-package net.werdei.config;
+package net.werdei.configloader;
 
 import com.google.gson.GsonBuilder;
 import net.fabricmc.loader.api.FabricLoader;

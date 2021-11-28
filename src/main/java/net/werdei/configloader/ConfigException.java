@@ -1,4 +1,4 @@
-package net.werdei.config;
+package net.werdei.configloader;
 
 public class ConfigException extends RuntimeException
 {
