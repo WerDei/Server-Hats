@@ -4,7 +4,7 @@ To equip an allowed item, simply put it in the helmet slot - no commands necessa
 Requires Fabric API  
 
 ## Configuration
-The mod is very customizable, making it easy to 
+The mod is very customizable, making it easy to tune it to your preference.
 
 By default, mod allows to equip some items that have special rendering rules in vanilla Minecraft:
 * Banners
