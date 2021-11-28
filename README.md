@@ -4,58 +4,33 @@ To equip an allowed item, simply put it in the helmet slot - no commands necessa
 Requires Fabric API  
 
 ## Configuration
-After loading the mod once, open up the `serverhats.json` file in the `config\` folder.  
-You will be able to set a few parameters:
+The mod is very customizable, making it easy to tune it to your preference.
 
-### "allowAllItems"
-A boolean value. When set to `true`, allows any item to be equipped to a head slot.
-
-By default, it is set to `false`.  
-
-### "allowedItems"
-A list of items that are allowed to be equipped in a head slot. Ignored when "allowAllItems" is set to `true`.
-Can contain any item IDs and item tags.
-
-By default, it includes some items that have special rendering rules in vanilla Minecraft:  
-```
-"#banners",
-"feather",
-"end_rod",
-"lightning_rod",
-"spyglass",
-
-"amethyst_cluster",
-"large_amethyst_bud",
-"medium_amethyst_bud",
-"small_amethyst_bud",
-
-"acacia_fence_gate",
-"birch_fence_gate",
-"dark_oak_fence_gate",
-"jungle_fence_gate",
-"oak_fence_gate",
-"spruce_fence_gate",
-"crimson_fence_gate",
-"warped_fence_gate",
-```
+By default, mod allows players to equip some items that have special rendering rules in vanilla Minecraft:
+* Banners
+* Fence gates
+* Amethyst clusters and buds
+* Feather
+* End rod
+* Lightning Rod
+* Spyglass
 
 And some other ones I thought looked cool\funny:
-```
-"azalea",
-"flowering_azalea",
-"scaffolding",
-"big_dripleaf",
-"slime_block",
-"honey_block",
-"composter",
-"glass",
-"tinted_glass",
-```
+* Glass blocks (including tinted and stained glass)
+* Azalea bushes
+* Scaffolding
+* Big dripleaf
+* Slime and honey blocks
+* Composter
 
-### "shiftClickEquipping"
-A boolean value. When set to `false`, prevents an allowed item from getting equipped in a head slot when shift-clicking it. 
+You can add/remove any items to/from this list. You can also make it so any item in the game can be used as a hat!
 
-By default, it is set to `false`.
+These items can also be equipped to players with a dispenser and can be enchanted with curse enchantments on an anvil (for when you want to test your frienships).
+
+Shift-clicking these items will not equip them - that way players won't accidentially end up with their building blocks on their heads.
+
+You can tweak all of those features using a configuration file:
+https://github.com/WerDei/Server-Hats/wiki
 
 ## Known issues
 * While in multiplayer, players in creative mode cannot equip items to a helmet slot
