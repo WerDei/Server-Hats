@@ -3,7 +3,7 @@
   "id": "server-hats",
   "version": "${version}",
   "name": "Server Hats",
-  "description": "",
+  "description": "Server-side Fabric mod that allows players equip items as hats. You don't need this mod on a client unless you want to use it in your singleplayer world!",
   "authors": [
     "WerDei"
   ],
@@ -22,6 +22,10 @@
   "depends": {
     "fabricloader": ">=0.11.6",
     "fabric": "*",
-    "minecraft": "1.18-rc.3"
+    "minecraft": [
+      "1.17.1",
+      "1.18-rc.4",
+      "1.18"
+    ]
   }
 }

@@ -1,6 +1,8 @@
 plugins {
     id 'fabric-loom' version '0.10-SNAPSHOT'
     id 'maven-publish'
+    id "com.modrinth.minotaur" version "1.2.1"
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
 version = project.mod_version
@@ -36,6 +38,52 @@ tasks.withType(JavaCompile).configureEach {
         it.options.release = targetJavaVersion
     }
 }
+
+
+// Mod publishing
+
+import com.modrinth.minotaur.TaskModrinthUpload
+
+def versionDisplayName = project.mod_name + ' - ' + project.version
+def supportedMinecraftVersions = project.mod_supported_minecraft_versions.split(',')
+def changelogText = new File('./CHANGELOG.md').text
+
+
+task modrinth (type: TaskModrinthUpload) {
+    group 'upload'
+    token = project.modrinth_token // saved in user home
+    projectId = project.modrinth_mod_id
+    versionName = versionDisplayName
+    versionNumber = project.version
+    for (ver in supportedMinecraftVersions) {
+        addGameVersion(ver)
+    }
+    versionType = project.mod_version_type
+    changelog = changelogText
+    uploadFile = remapJar
+    addLoader('fabric')
+}
+
+curseforge {
+    apiKey = project.curseforge_token // saved in user home
+    project {
+        relations {
+            requiredDependency 'fabric-api'
+        }
+        id = project.curseforge_mod_id
+        changelogType = 'markdown'
+        changelog = changelogText
+        releaseType = project.mod_version_type
+
+        for (ver in supportedMinecraftVersions) {
+            addGameVersion ver
+        }
+        mainArtifact(remapJar) {
+            displayName = versionDisplayName
+        }
+    }
+}
+
 
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
