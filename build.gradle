@@ -78,6 +78,7 @@ curseforge {
         for (ver in supportedMinecraftVersions) {
             addGameVersion ver
         }
+        addGameVersion 'Fabric' //TODO Untested, might mot work
         mainArtifact(remapJar) {
             displayName = versionDisplayName
         }
