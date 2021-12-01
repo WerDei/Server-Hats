@@ -13,10 +13,14 @@ public class Config
 
     public static String[] allowedItems = new String[]{
             "#banners",
+            "#beds",
             "feather",
             "end_rod",
             "lightning_rod",
             "spyglass",
+            "cod",
+            "lead",
+            "bone",
 
             "amethyst_cluster",
             "large_amethyst_bud",
