@@ -2,6 +2,7 @@ package net.werdei.serverhats;
 
 import com.mojang.brigadier.StringReader;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.impl.item.ItemExtensions;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
@@ -25,25 +26,29 @@ public class ServerHats implements ModInitializer
     private static final String LOG_PREFIX = "[ServerHats]: ";
     private static final String CONFIG_FILE_NAME = "serverhats.json";
 
-    private static HashSet<Item> assignedItems = null;
+    private static HashSet<Item> allowedItems = null;
 
     @Override
     public void onInitialize()
     {
-        ConfigLoader.load(Config.class, CONFIG_FILE_NAME);
-        ConfigLoader.save(Config.class, CONFIG_FILE_NAME);
+        CommandRegistrationCallback.EVENT.register(((dispatcher, dedicated) -> HatsCommand.register(dispatcher)));
     }
 
-    public static void assignEquipmentSlots()
+    public static void reloadConfig()
     {
-        if (assignedItems != null) return;
+        ConfigLoader.load(Config.class, CONFIG_FILE_NAME);
+        ConfigLoader.save(Config.class, CONFIG_FILE_NAME);
 
-        assignedItems = new HashSet<>();
+        if (allowedItems != null)
+            allowedItems.forEach(ServerHats::unassignSlotFrom);
+        allowedItems = new HashSet<>();
+
         if (Config.allowAllItems)
             assignSlotsToAllItems();
         else
             assignSlotsToListedItems();
-        log("Successfully added ability to equip " + assignedItems.size() + " items");
+
+        log("Successfully added ability to equip " + allowedItems.size() + " items");
     }
 
     private static void assignSlotsToAllItems()
@@ -90,32 +95,46 @@ public class ServerHats implements ModInitializer
         });
     }
 
-    private static void allowItem(Item item)
+
+    public static void allowItem(Item item)
     {
-        if (assignedItems.contains(item))
+        if (allowedItems.contains(item))
             throw new RuntimeException("Item " + item.getName() + " is already allowed.");
+        assignSlotTo(item);
+        allowedItems.add(item);
+    }
+
+    public static void disallowItem(Item item)
+    {
+        if (!allowedItems.contains(item))
+            throw new RuntimeException("Item " + item.getName() + " is already disallowed.");
+        unassignSlotFrom(item);
+        allowedItems.remove(item);
+    }
+
+    public static boolean isItemAllowed(Item item)
+    {
+        if (allowedItems == null) return false;
+        return allowedItems.contains(item);
+    }
+
+
+    private static void assignSlotTo(Item item)
+    {
         EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(new ItemStack(item));
         if (equipmentSlot != EquipmentSlot.MAINHAND)
             throw new RuntimeException("Item already assigned to equipment slot \"" + equipmentSlot.getName() + "\"");
 
         ((ItemExtensions) item).fabric_setEquipmentSlotProvider(HeadEquipmentSlotProvider.PROVIDER);
-        assignedItems.add(item);
     }
 
-    private static void disallowItem(Item item)
+    private static void unassignSlotFrom(Item item)
     {
-        if (!assignedItems.contains(item))
-            throw new RuntimeException("Item " + item.getName() + " is already not allowed.");
-
         ((ItemExtensions) item).fabric_setEquipmentSlotProvider(null);
-        assignedItems.remove(item);
     }
 
-    public static boolean isItemAllowed(Item item)
-    {
-        if (assignedItems == null) return false;
-        return assignedItems.contains(item);
-    }
+
+    // Logging
 
     public static void log(Object message)
     {
