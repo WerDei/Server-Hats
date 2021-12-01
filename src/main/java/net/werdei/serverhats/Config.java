@@ -59,5 +59,6 @@ public class Config
             "red_stained_glass",
             "black_stained_glass",
             "tinted_glass",
+            "conduit"
     };
 }
