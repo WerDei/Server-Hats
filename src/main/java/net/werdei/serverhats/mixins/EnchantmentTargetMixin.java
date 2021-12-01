@@ -18,6 +18,6 @@ public class EnchantmentTargetMixin
     public void isAcceptableItem(Item item, CallbackInfoReturnable<Boolean> cir)
     {
         if (!Config.enchanting) return;
-        cir.setReturnValue(cir.getReturnValue() || ServerHats.isItemSlotAssigned(item));
+        cir.setReturnValue(cir.getReturnValue() || ServerHats.isItemAllowed(item));
     }
 }

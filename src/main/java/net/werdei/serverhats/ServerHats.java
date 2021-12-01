@@ -3,10 +3,8 @@ package net.werdei.serverhats;
 import com.mojang.brigadier.StringReader;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.impl.item.ItemExtensions;
-import net.minecraft.block.DispenserBlock;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tag.ServerTagManagerHolder;
@@ -54,7 +52,7 @@ public class ServerHats implements ModInitializer
         {
             try
             {
-                assignSlotTo(item);
+                allowItem(item);
             }
             catch (RuntimeException ignored) {}
         });
@@ -74,7 +72,7 @@ public class ServerHats implements ModInitializer
                     Tag<Item> tag = ServerTagManagerHolder.getTagManager().getTag(Registry.ITEM_KEY, id, (identifier) ->
                             new RuntimeException("Unknown item tag '" + identifier + "'"));
 
-                    tag.values().forEach(ServerHats::assignSlotTo);
+                    tag.values().forEach(ServerHats::allowItem);
                 }
                 else
                 {
@@ -82,7 +80,7 @@ public class ServerHats implements ModInitializer
                     Item item = Registry.ITEM.getOrEmpty(id).orElseThrow(() ->
                             new RuntimeException("Unknown item identifier '" + id + "'"));
 
-                    assignSlotTo(item);
+                    allowItem(item);
                 }
             }
             catch (Exception e)
@@ -92,18 +90,28 @@ public class ServerHats implements ModInitializer
         });
     }
 
-    private static void assignSlotTo(Item item)
+    private static void allowItem(Item item)
     {
+        if (assignedItems.contains(item))
+            throw new RuntimeException("Item " + item.getName() + " is already allowed.");
         EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(new ItemStack(item));
         if (equipmentSlot != EquipmentSlot.MAINHAND)
             throw new RuntimeException("Item already assigned to equipment slot \"" + equipmentSlot.getName() + "\"");
+
         ((ItemExtensions) item).fabric_setEquipmentSlotProvider(HeadEquipmentSlotProvider.PROVIDER);
-        if (Config.dispenserEquipping)
-            DispenserBlock.registerBehavior(item, ArmorItem.DISPENSER_BEHAVIOR);
         assignedItems.add(item);
     }
 
-    public static boolean isItemSlotAssigned(Item item)
+    private static void disallowItem(Item item)
+    {
+        if (!assignedItems.contains(item))
+            throw new RuntimeException("Item " + item.getName() + " is already not allowed.");
+
+        ((ItemExtensions) item).fabric_setEquipmentSlotProvider(null);
+        assignedItems.remove(item);
+    }
+
+    public static boolean isItemAllowed(Item item)
     {
         if (assignedItems == null) return false;
         return assignedItems.contains(item);
