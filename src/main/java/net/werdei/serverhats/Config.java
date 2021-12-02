@@ -2,7 +2,6 @@ package net.werdei.serverhats;
 
 public class Config
 {
-
     public static boolean shiftClickEquipping = false;
 
     public static boolean dispenserEquipping = true;
@@ -21,6 +20,7 @@ public class Config
             "cod",
             "lead",
             "bone",
+            "conduit",
 
             "amethyst_cluster",
             "large_amethyst_bud",
@@ -63,6 +63,5 @@ public class Config
             "red_stained_glass",
             "black_stained_glass",
             "tinted_glass",
-            "conduit"
     };
 }

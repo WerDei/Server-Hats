@@ -6,14 +6,19 @@ The mod is very customizable, making it easy to tune it to your preference.
 Requires Fabric API  
 
 ## Features
-By default, mod allows players to equip some items that have special rendering rules in vanilla Minecraft:
+By default, mod allows players to equip most items that have special rendering rules in vanilla Minecraft:
 * Banners
 * Fence gates
 * Amethyst clusters and buds
+* Beds
 * Feather
 * End rod
 * Lightning Rod
 * Spyglass
+* Lead
+* Bone
+* Cod
+* Conduit
 
 And some other ones I thought looked cool\funny:
 * Glass blocks (including tinted and stained glass)
