@@ -1,5 +1,7 @@
 package net.werdei.serverhats;
 
+import net.werdei.configloader.ConfigLoader;
+
 public class Config
 {
     public static boolean shiftClickEquipping = false;
@@ -64,4 +66,22 @@ public class Config
             "black_stained_glass",
             "tinted_glass",
     };
+
+
+    // Saving and loading
+
+    public static void load()
+    {
+        ConfigLoader.load(Config.class, getFileName());
+    }
+
+    public static void save()
+    {
+        ConfigLoader.save(Config.class, getFileName());
+    }
+
+    private static String getFileName()
+    {
+        return "serverhats.json";
+    }
 }
