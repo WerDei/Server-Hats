@@ -90,6 +90,7 @@ public class ServerHats implements ModInitializer
         return allowedItems.contains(item);
     }
 
+
     // Logging
 
     public static void log(Object message)

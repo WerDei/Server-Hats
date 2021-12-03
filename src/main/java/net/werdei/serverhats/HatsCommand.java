@@ -59,6 +59,7 @@ public class HatsCommand
             }
             field.setBoolean(null, value);
             source.sendFeedback(new LiteralText(name + " is now set to " + value), true);
+            Config.save();
             return value ? 2 : 1;
         }
         catch (Exception e)
