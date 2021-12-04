@@ -89,7 +89,12 @@ public class HatsCommand
 
     private static int allowItems(ServerCommandSource source, Predicate<ItemStack> itemPredicate)
     {
-        // TODO allowAllItems check
+        if (Config.allowAllItems)
+        {
+            source.sendError(new LiteralText("Cannot modify allowed item list while \"allowAllItems\" is set to \"true\""));
+            return 0;
+        }
+
         var input = extractItems(itemPredicate);
 
         if (Config.addAllowedItemId(input.id, input.isTag))
@@ -108,6 +113,12 @@ public class HatsCommand
 
     private static int disallowItems(ServerCommandSource source, Predicate<ItemStack> itemPredicate)
     {
+        if (Config.allowAllItems)
+        {
+            source.sendError(new LiteralText("Cannot modify allowed item list while \"allowAllItems\" is set to \"true\""));
+            return 0;
+        }
+
         var input = extractItems(itemPredicate);
 
         if (Config.removeAllowedItemId(input.id, input.isTag))
