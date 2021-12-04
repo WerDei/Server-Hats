@@ -1,6 +1,10 @@
 package net.werdei.serverhats;
 
+import net.minecraft.util.Identifier;
 import net.werdei.configloader.ConfigLoader;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Config
 {
@@ -83,5 +87,47 @@ public class Config
     private static String getFileName()
     {
         return "serverhats.json";
+    }
+
+    // Utilities
+
+    public static boolean addAllowedItemId(Identifier id, boolean isTag)
+    {
+        var allowedIds = new ArrayList<>(List.of(allowedItems));
+        var idStrings = getApplicableIdStrings(id, isTag);
+
+        for (var idString: idStrings)
+            if (allowedIds.contains(idString))
+                return false;
+
+        allowedIds.add(idStrings.get(idStrings.size()-1));
+        allowedItems = allowedIds.toArray(new String[0]);
+        save();
+        return true;
+    }
+
+    public static boolean removeAllowedItemId(Identifier id, boolean isTag)
+    {
+        var allowedIds = new ArrayList<>(List.of(allowedItems));
+        int allowedIdCountBefore = allowedIds.size();
+
+        var idStrings = getApplicableIdStrings(id, isTag);
+        idStrings.forEach(allowedIds::remove);
+
+        if (allowedIdCountBefore == allowedIds.size())
+            return false;
+
+        allowedItems = allowedIds.toArray(new String[0]);
+        save();
+        return true;
+    }
+
+    private static List<String> getApplicableIdStrings(Identifier id, boolean isTag)
+    {
+        var out = new ArrayList<String>();
+        out.add(id.toString());
+        if (id.getNamespace().equals("minecraft"))
+            out.add(id.toString().split(":")[1]);
+        return out.stream().map(s -> (isTag ? "#" : "") + s).toList();
     }
 }

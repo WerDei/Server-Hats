@@ -4,10 +4,10 @@ import com.mojang.brigadier.StringReader;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.item.Item;
-import net.minecraft.tag.ServerTagManagerHolder;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.werdei.serverhats.utils.Tags;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,7 +20,6 @@ public class ServerHats implements ModInitializer
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String LOG_PREFIX = "[ServerHats]: ";
 
-    private static boolean initialized = false;
     private static HashSet<Item> allowedItems = null;
 
     @Override
@@ -31,10 +30,22 @@ public class ServerHats implements ModInitializer
 
     public static void reloadConfig()
     {
-        initialized = false;
         Config.load();
         Config.save();
 
+        recalculateAllowedItemList();
+
+        String itemCount = Config.allowAllItems ? "all non-wearable" : Integer.toString(allowedItems.size());
+        log("Successfully added ability to equip " + itemCount + " items");
+    }
+
+    private static void allowItem(Item item)
+    {
+        allowedItems.add(item);
+    }
+
+    public static void recalculateAllowedItemList()
+    {
         allowedItems = new HashSet<>();
         List.of(Config.allowedItems).forEach(string ->
         {
@@ -45,8 +56,7 @@ public class ServerHats implements ModInitializer
                 {
                     reader.expect('#');
                     Identifier id = Identifier.fromCommandInput(reader);
-                    Tag<Item> tag = ServerTagManagerHolder.getTagManager().getTag(Registry.ITEM_KEY, id, (identifier) ->
-                            new RuntimeException("Unknown item tag '" + identifier + "'"));
+                    Tag<Item> tag = Tags.getItemTag(id);
 
                     tag.values().forEach(ServerHats::allowItem);
                 } else
@@ -63,29 +73,11 @@ public class ServerHats implements ModInitializer
                 warn("Error modifying \"" + string + "\": " + e.getMessage());
             }
         });
-
-        String itemCount = Config.allowAllItems ? "all non-wearable" : Integer.toString(allowedItems.size());
-        log("Successfully added ability to equip " + itemCount + " items");
-        initialized = true;
-    }
-
-    public static void allowItem(Item item)
-    {
-        if (allowedItems.contains(item))
-            throw new RuntimeException("Item " + item.getName() + " is already allowed.");
-        allowedItems.add(item);
-    }
-
-    public static void disallowItem(Item item)
-    {
-        if (!allowedItems.contains(item))
-            throw new RuntimeException("Item " + item.getName() + " is already disallowed.");
-        allowedItems.remove(item);
     }
 
     public static boolean isItemAllowed(Item item)
     {
-        if (!initialized) return false;
+        if (allowedItems == null) return false;
         if (Config.allowAllItems) return true;
         return allowedItems.contains(item);
     }

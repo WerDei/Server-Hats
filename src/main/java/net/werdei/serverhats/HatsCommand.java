@@ -2,9 +2,21 @@ package net.werdei.serverhats;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
+import net.minecraft.command.argument.ItemPredicateArgumentType;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.tag.Tag;
 import net.minecraft.text.LiteralText;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import net.werdei.serverhats.mixins.ItemPredicateArgumentType.ItemPredicateAccessor;
+import net.werdei.serverhats.mixins.ItemPredicateArgumentType.TagPredicateAccessor;
+import net.werdei.serverhats.utils.Tags;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 public class HatsCommand
 {
@@ -27,6 +39,12 @@ public class HatsCommand
             }
         }
         rootArgument.then(setArgument);
+
+        String argumentName = "item or item tag";
+        rootArgument.then(CommandManager.literal("allow").then(CommandManager.argument(argumentName, ItemPredicateArgumentType.itemPredicate()).executes((context ->
+                allowItems(context.getSource(), ItemPredicateArgumentType.getItemPredicate(context, argumentName))))));
+        rootArgument.then(CommandManager.literal("disallow").then(CommandManager.argument(argumentName, ItemPredicateArgumentType.itemPredicate()).executes((context ->
+                disallowItems(context.getSource(), ItemPredicateArgumentType.getItemPredicate(context, argumentName))))));
 
         var command = dispatcher.register(rootArgument);
         dispatcher.register(CommandManager.literal("serverhats").redirect(command));
@@ -59,6 +77,7 @@ public class HatsCommand
             }
             field.setBoolean(null, value);
             source.sendFeedback(new LiteralText(name + " is now set to " + value), true);
+
             Config.save();
             return value ? 2 : 1;
         }
@@ -67,4 +86,61 @@ public class HatsCommand
             return 0;
         }
     }
+
+    private static int allowItems(ServerCommandSource source, Predicate<ItemStack> itemPredicate)
+    {
+        // TODO allowAllItems check
+        var input = extractItems(itemPredicate);
+
+        if (Config.addAllowedItemId(input.id, input.isTag))
+        {
+            ServerHats.recalculateAllowedItemList();
+            source.sendFeedback(new LiteralText((input.isTag ? "Items in a tag " : "Item ") + input.id + " now can be worn as a hat"), true);
+            return 1;
+        }
+        else
+        {
+            source.sendError(new LiteralText((input.isTag ? "Items in a tag " : "Item ") + input.id + " already can be worn as a hat"));
+            return 0;
+        }
+
+    }
+
+    private static int disallowItems(ServerCommandSource source, Predicate<ItemStack> itemPredicate)
+    {
+        var input = extractItems(itemPredicate);
+
+        if (Config.removeAllowedItemId(input.id, input.isTag))
+        {
+            ServerHats.recalculateAllowedItemList();
+            source.sendFeedback(new LiteralText((input.isTag ? "Items in a tag " : "Item ") + input.id + " now cannot be worn as a hat"), true);
+            return 1;
+        }
+        else
+        {
+            source.sendError(new LiteralText((input.isTag ? "Items in a tag " : "Item ") + input.id + " already can't be worn as a hat"));
+            return 0;
+        }
+    }
+
+
+    private static PredicateExtraction extractItems(Predicate<ItemStack> itemPredicate)
+    {
+        try
+        {
+            Tag<Item> tag = ((TagPredicateAccessor) itemPredicate).getTag();
+            return new PredicateExtraction(tag.values(), Tags.getItemTagId(tag), true);
+        }
+        catch (Exception ignored)
+        {
+            var item = ((ItemPredicateAccessor) itemPredicate).getItem();
+            return new PredicateExtraction(List.of(item), Registry.ITEM.getId(item), false);
+        }
+    }
+
+    private record PredicateExtraction(
+        List<Item> items,
+        Identifier id,
+        boolean isTag
+    ){}
 }

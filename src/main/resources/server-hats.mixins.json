@@ -9,7 +9,9 @@
     "EnchantmentTargetMixin",
     "MinecraftServerMixin",
     "PlayerScreenHandlerMixin",
-    "PlayerScreenHandlerSlotMixin"
+    "PlayerScreenHandlerSlotMixin",
+    "ItemPredicateArgumentType.ItemPredicateAccessor",
+    "ItemPredicateArgumentType.TagPredicateAccessor"
   ],
   "client": [
   ],
