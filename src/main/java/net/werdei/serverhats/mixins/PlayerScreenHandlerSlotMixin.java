@@ -18,7 +18,7 @@ public class PlayerScreenHandlerSlotMixin
     EquipmentSlot field_7834;
 
     @Inject(method = "canInsert(Lnet/minecraft/item/ItemStack;)Z", at = @At("RETURN"), cancellable = true)
-    public void canInsert(ItemStack stack, CallbackInfoReturnable<Boolean> cir)
+    public void allowItemEquipping(ItemStack stack, CallbackInfoReturnable<Boolean> cir)
     {
         if (field_7834 != EquipmentSlot.HEAD || !ServerHats.isItemAllowed(stack.getItem())) return;
             cir.setReturnValue(true);
