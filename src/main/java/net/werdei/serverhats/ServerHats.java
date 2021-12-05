@@ -25,6 +25,7 @@ public class ServerHats implements ModInitializer
 
     private static HashSet<Item> allowedItems = null;
     private static HashSet<Item> restrictedItems = null;
+    private static boolean itemListsInitialized = false;
 
     @Override
     public void onInitialize()
@@ -53,6 +54,7 @@ public class ServerHats implements ModInitializer
 
     public static void recalculateItemLists(OnOutput info, OnOutput warning)
     {
+        itemListsInitialized = false;
         allowedItems = new HashSet<>();
 
         if (restrictedItems == null)
@@ -82,7 +84,7 @@ public class ServerHats implements ModInitializer
                         }
                         catch (Exception e)
                         {
-                            warning.sendMessage("Skipping \"" + string + "\": " + e.getMessage());
+                            warning.sendMessage("Skipping \"" + Registry.ITEM.getId(item) + "\": " + e.getMessage());
                         }
                     });
                 } else
@@ -99,6 +101,7 @@ public class ServerHats implements ModInitializer
                 warning.sendMessage("Skipping \"" + string + "\": " + e.getMessage());
             }
         });
+        itemListsInitialized = true;
     }
 
     private static void allowItem(Item item)
@@ -109,7 +112,7 @@ public class ServerHats implements ModInitializer
 
     public static boolean isItemAllowed(Item item)
     {
-        if (allowedItems == null) return false;
+        if (!itemListsInitialized) return false;
         if (Config.allowAllItems) return !restrictedItems.contains(item);
         return allowedItems.contains(item);
     }

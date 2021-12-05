@@ -28,23 +28,29 @@ public class HatsCommand
                 reload(context.getSource())
         ));
 
-        var setArgument = CommandManager.literal("set");
         for (var configField: Config.class.getDeclaredFields())
         {
             if (configField.getType() == boolean.class)
             {
                 var configName = configField.getName();
-                setArgument.then(CommandManager.literal(configName).then(CommandManager.argument("value", BoolArgumentType.bool()).executes((context ->
-                        setConfigValue(context.getSource(), configName, BoolArgumentType.getBool(context, "value"))))));
+                var configArgumentBuilder = CommandManager.literal(configName);
+                configArgumentBuilder.executes(context ->
+                        getSimpleConfigValue(context.getSource(), configName));
+                configArgumentBuilder.then(CommandManager.argument("value", BoolArgumentType.bool()).executes((context ->
+                        setBooleanConfigValue(context.getSource(), configName, BoolArgumentType.getBool(context, "value")))));
+                rootArgument.then(configArgumentBuilder);
             }
         }
-        rootArgument.then(setArgument);
 
+        var allowedItemsArgument = CommandManager.literal("allowedItems");
         String argumentName = "item or item tag";
-        rootArgument.then(CommandManager.literal("allow").then(CommandManager.argument(argumentName, ItemPredicateArgumentType.itemPredicate()).executes((context ->
+        allowedItemsArgument.then(CommandManager.literal("add").then(CommandManager.argument(argumentName, ItemPredicateArgumentType.itemPredicate()).executes((context ->
                 allowItems(context.getSource(), ItemPredicateArgumentType.getItemPredicate(context, argumentName))))));
-        rootArgument.then(CommandManager.literal("disallow").then(CommandManager.argument(argumentName, ItemPredicateArgumentType.itemPredicate()).executes((context ->
+        allowedItemsArgument.then(CommandManager.literal("remove").then(CommandManager.argument(argumentName, ItemPredicateArgumentType.itemPredicate()).executes((context ->
                 disallowItems(context.getSource(), ItemPredicateArgumentType.getItemPredicate(context, argumentName))))));
+        allowedItemsArgument.executes(context ->
+                getArrayConfigValue(context.getSource(), "allowedItems"));
+        rootArgument.then(allowedItemsArgument);
 
         var command = dispatcher.register(rootArgument);
         dispatcher.register(CommandManager.literal("serverhats").redirect(command));
@@ -66,7 +72,7 @@ public class HatsCommand
         return 0;
     }
 
-    private static int setConfigValue(ServerCommandSource source, String name, boolean value)
+    private static int setBooleanConfigValue(ServerCommandSource source, String name, boolean value)
     {
         try
         {
@@ -81,6 +87,44 @@ public class HatsCommand
 
             Config.save();
             return value ? 2 : 1;
+        }
+        catch (Exception e)
+        {
+            return 0;
+        }
+    }
+
+    private static int getSimpleConfigValue(ServerCommandSource source, String name)
+    {
+        try
+        {
+            var field = Config.class.getField(name);
+            source.sendFeedback(new LiteralText(name + " is currently set to " + field.get(null)), true);
+            return 1;
+        }
+        catch (Exception e)
+        {
+            return 0;
+        }
+    }
+
+    private static int getArrayConfigValue(ServerCommandSource source, String name)
+    {
+        try
+        {
+            var field = Config.class.getField(name);
+            var array = (Object[]) field.get(null);
+            source.sendFeedback(new LiteralText(name + " currently contains: "), true);
+            StringBuilder contents = new StringBuilder();
+            boolean first = true;
+            for (var obj : array)
+            {
+                contents.append(first ? "" : ", ");
+                first = false;
+                contents.append(obj.toString());
+            }
+            source.sendFeedback(new LiteralText(contents.toString()), true);
+            return 1;
         }
         catch (Exception e)
         {
