@@ -7,7 +7,10 @@
   "authors": [
     "WerDei"
   ],
-  "contact": {},
+  "contact": {
+    "sources": "https://github.com/WerDei/Server-Hats",
+    "issues": "https://github.com/WerDei/Server-Hats/issues"
+  },
   "license": "MIT",
   "icon": "icon.png",
   "environment": "*",
