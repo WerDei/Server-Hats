@@ -31,10 +31,11 @@ And some other ones I thought looked cool\funny:
 You can add/remove any items to/from this list. You can also make it so any item in the game can be used as a hat!
 
 These items can also be equipped to players with a dispenser and can be enchanted with curse enchantments on an anvil (for when you want to test your friendships).
+You can also enchant items with helmet enchantments like Respiration!
 
 Shift-clicking these items will not equip them - that way players won't accidentally end up with their building blocks on their heads.
 
-You can tweak all of those features using a configuration file:
+You can tweak all of those features using a `/hats` command or configuration file:
 https://github.com/WerDei/Server-Hats/wiki
 
 ## Known issues
