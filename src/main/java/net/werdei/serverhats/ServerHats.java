@@ -39,16 +39,16 @@ public class ServerHats implements ModInitializer
 
     public static void reloadConfig(OnOutput info, OnOutput warning)
     {
-        Config.load();
-        Config.save();
-
         if (info == null) info = ServerHats::log;
         if (warning == null) warning = ServerHats::warn;
+
+        Config.load();
+        Config.save();
 
         recalculateItemLists(info, warning);
 
         String itemCount = Config.allowAllItems ? "all" : Integer.toString(allowedItems.size());
-        log("Successfully added ability to equip " + itemCount + " items");
+        info.sendMessage("Successfully added ability to equip " + itemCount + " items");
     }
 
     public static void recalculateItemLists(OnOutput info, OnOutput warning)

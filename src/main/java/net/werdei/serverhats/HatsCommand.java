@@ -63,7 +63,6 @@ public class HatsCommand
             source.sendError(new LiteralText("Could not load a configuration file: " + e.getMessage()));
             return 1;
         }
-        source.sendFeedback(new LiteralText("Configuration file reloaded successfully"), true);
         return 0;
     }
 
