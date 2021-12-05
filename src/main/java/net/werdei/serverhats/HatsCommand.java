@@ -54,7 +54,9 @@ public class HatsCommand
     {
         try
         {
-            ServerHats.reloadConfig();
+            ServerHats.reloadConfig(
+                    s -> source.sendFeedback(new LiteralText(s), true),
+                    s -> source.sendError(new LiteralText(s)));
         }
         catch (Exception e)
         {
@@ -99,16 +101,17 @@ public class HatsCommand
 
         if (Config.addAllowedItemId(input.id, input.isTag))
         {
-            ServerHats.recalculateAllowedItemList();
-            source.sendFeedback(new LiteralText((input.isTag ? "Items in a tag " : "Item ") + input.id + " now can be worn as a hat"), true);
+            ServerHats.recalculateItemLists(
+                    s -> source.sendFeedback(new LiteralText(s), true),
+                    s -> source.sendError(new LiteralText(s)));
+            source.sendFeedback(new LiteralText("Successfully updated allowedItems list"), true);
             return 1;
         }
         else
         {
-            source.sendError(new LiteralText((input.isTag ? "Items in a tag " : "Item ") + input.id + " already can be worn as a hat"));
+            source.sendError(new LiteralText((input.isTag ? "Item tag " : "Item ") + input.id + " is already in the allowedItems list"));
             return 0;
         }
-
     }
 
     private static int disallowItems(ServerCommandSource source, Predicate<ItemStack> itemPredicate)
@@ -123,13 +126,15 @@ public class HatsCommand
 
         if (Config.removeAllowedItemId(input.id, input.isTag))
         {
-            ServerHats.recalculateAllowedItemList();
-            source.sendFeedback(new LiteralText((input.isTag ? "Items in a tag " : "Item ") + input.id + " now cannot be worn as a hat"), true);
+            ServerHats.recalculateItemLists(
+                    s -> source.sendFeedback(new LiteralText(s), true),
+                    s -> source.sendError(new LiteralText(s)));
+            source.sendFeedback(new LiteralText("Successfully updated allowedItems list"), true);
             return 1;
         }
         else
         {
-            source.sendError(new LiteralText((input.isTag ? "Items in a tag " : "Item ") + input.id + " already can't be worn as a hat"));
+            source.sendError(new LiteralText((input.isTag ? "Item tag " : "Item ") + input.id + " is already not in the allowedItems list"));
             return 0;
         }
     }

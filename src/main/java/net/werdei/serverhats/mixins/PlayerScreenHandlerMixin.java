@@ -26,8 +26,8 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler
                     target = "Lnet/minecraft/entity/mob/MobEntity;getPreferredEquipmentSlot(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/entity/EquipmentSlot;"))
     public EquipmentSlot preventQuickTransferEquip(EquipmentSlot equipmentSlot, PlayerEntity player, int index)
     {
-        if (equipmentSlot == EquipmentSlot.MAINHAND && Config.shiftClickEquipping && ServerHats.isItemAllowed(slots.get(index).getStack().getItem()))
-            return EquipmentSlot.HEAD;
+        if (equipmentSlot == EquipmentSlot.HEAD && !Config.shiftClickEquipping && ServerHats.isItemAllowed(slots.get(index).getStack().getItem()))
+            return EquipmentSlot.MAINHAND;
         else
             return equipmentSlot;
     }
