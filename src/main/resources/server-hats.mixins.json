@@ -8,6 +8,7 @@
     "EnchantmentTargetMixin",
     "LivingEntityMixin",
     "MinecraftServerMixin",
+    "MobEntityMixin",
     "PlayerScreenHandlerMixin",
     "PlayerScreenHandlerSlotMixin",
     "ItemPredicateArgumentType.ItemPredicateAccessor",

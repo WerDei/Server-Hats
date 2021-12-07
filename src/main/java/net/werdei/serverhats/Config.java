@@ -14,6 +14,8 @@ public class Config
 
     public static boolean enchanting = true;
 
+    public static boolean mobsCanEquipHats = false;
+
     public static boolean allowAllItems = false;
 
     public static String[] allowedItems = new String[]{
