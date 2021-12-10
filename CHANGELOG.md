@@ -1,1 +1,1 @@
-* Mobs that can pick up items now won't equip allowed items on their heads (configurable with `mobsCanEquipHats` option)
+* Fixed an issue where dispenserEquipping broke dispenser functionality of an item if it was allowed to use as a hat

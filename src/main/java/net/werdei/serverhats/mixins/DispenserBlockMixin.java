@@ -17,7 +17,7 @@ public class DispenserBlockMixin
     @Inject(method = "getBehaviorForItem", at = @At("RETURN"), cancellable = true)
     protected void dispenserEquip(ItemStack stack, CallbackInfoReturnable<DispenserBehavior> cir)
     {
-        if (Config.dispenserEquipping && ServerHats.isItemAllowed(stack.getItem()))
+        if (Config.dispenserEquipping && ServerHats.isItemAllowed(stack.getItem()) && cir.getReturnValue() == null)
             cir.setReturnValue(ArmorItem.DISPENSER_BEHAVIOR);
     }
 }
