@@ -1,1 +1,1 @@
-* Fixed an issue where dispenserEquipping broke dispenser functionality of an item if it was allowed to use as a hat
+* Fixed an issue with dispenserEquipping breaking dispenser functionality of an item, if that item is allowed to be used as a hat
