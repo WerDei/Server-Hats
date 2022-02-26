@@ -15,7 +15,7 @@ public class LivingEntityMixin
     @Inject(method = "getPreferredEquipmentSlot", at = @At("RETURN"), cancellable = true)
     private static void substituteEquipmentSlot(ItemStack stack, CallbackInfoReturnable<EquipmentSlot> cir)
     {
-        if (cir.getReturnValue() == EquipmentSlot.MAINHAND && ServerHats.isItemAllowed(stack.getItem()))
+        if (cir.getReturnValue() == EquipmentSlot.MAINHAND && ServerHats.isItemAllowed(stack))
             cir.setReturnValue(EquipmentSlot.HEAD);
     }
 }

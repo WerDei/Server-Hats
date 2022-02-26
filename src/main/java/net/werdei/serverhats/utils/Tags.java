@@ -1,5 +1,5 @@
 package net.werdei.serverhats.utils;
-
+/*
 import net.minecraft.item.Item;
 import net.minecraft.tag.ServerTagManagerHolder;
 import net.minecraft.tag.Tag;
@@ -20,3 +20,5 @@ public class Tags
                 new RuntimeException("Unknown item tag '" + identifier + "'"));
     }
 }
+
+ */

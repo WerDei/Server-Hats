@@ -1,21 +1,22 @@
 package net.werdei.serverhats;
 
 import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.minecraft.command.argument.ItemPredicateArgumentType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tag.Tag;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.werdei.serverhats.utils.Tags;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Predicate;
 
 @SuppressWarnings("FieldMayBeFinal")
 public class ServerHats implements ModInitializer
@@ -23,7 +24,7 @@ public class ServerHats implements ModInitializer
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String LOG_PREFIX = "[ServerHats]: ";
 
-    private static HashSet<Item> allowedItems = null;
+    private static ArrayList<Predicate<ItemStack>> allowedItemPredicates = null;
     private static HashSet<Item> restrictedItems = null;
     private static boolean itemListsInitialized = false;
 
@@ -48,14 +49,14 @@ public class ServerHats implements ModInitializer
 
         recalculateItemLists(info, warning);
 
-        String itemCount = Config.allowAllItems ? "all" : Integer.toString(allowedItems.size());
+        String itemCount = Config.allowAllItems ? "all" : Integer.toString(allowedItemPredicates.size());
         info.sendMessage("Successfully added ability to equip " + itemCount + " items");
     }
 
     public static void recalculateItemLists(OnOutput info, OnOutput warning)
     {
         itemListsInitialized = false;
-        allowedItems = new HashSet<>();
+        allowedItemPredicates = new ArrayList<>();
 
         if (restrictedItems == null)
         {
@@ -68,35 +69,13 @@ public class ServerHats implements ModInitializer
         List.of(Config.allowedItems).forEach(string ->
         {
             StringReader reader = new StringReader(string);
+            var itemPredicateArgumentType = new ItemPredicateArgumentType();
             try
             {
-                if (reader.peek() == '#')
-                {
-                    reader.expect('#');
-                    Identifier id = Identifier.fromCommandInput(reader);
-                    Tag<Item> tag = Tags.getItemTag(id);
-
-                    tag.values().forEach(item ->
-                    {
-                        try
-                        {
-                            allowItem(item);
-                        }
-                        catch (Exception e)
-                        {
-                            warning.sendMessage("Skipping \"" + Registry.ITEM.getId(item) + "\": " + e.getMessage());
-                        }
-                    });
-                } else
-                {
-                    Identifier id = Identifier.fromCommandInput(reader);
-                    Item item = Registry.ITEM.getOrEmpty(id).orElseThrow(() ->
-                            new RuntimeException("Unknown item identifier '" + id + "'"));
-
-                    allowItem(item);
-                }
+                var itemPredicate = itemPredicateArgumentType.parse(reader).create(null);
+                addAllowedItemPredicate(itemPredicate);
             }
-            catch (Exception e)
+            catch (CommandSyntaxException e)
             {
                 warning.sendMessage("Skipping \"" + string + "\": " + e.getMessage());
             }
@@ -104,23 +83,16 @@ public class ServerHats implements ModInitializer
         itemListsInitialized = true;
     }
 
-    private static void allowItem(Item item)
+    private static void addAllowedItemPredicate(Predicate<ItemStack> predicate)
     {
-        throwExceptionIfItemIsRestricted(item);
-        allowedItems.add(item);
+        allowedItemPredicates.add(predicate);
     }
 
-    public static boolean isItemAllowed(Item item)
+    public static boolean isItemAllowed(ItemStack stack)
     {
         if (!itemListsInitialized) return false;
-        if (Config.allowAllItems) return !restrictedItems.contains(item);
-        return allowedItems.contains(item);
-    }
-
-    public static void throwExceptionIfItemIsRestricted(Item item)
-    {
-        if (restrictedItems != null && restrictedItems.contains(item))
-            throw new RuntimeException("The item can already be equipped in a helmet slot!");
+        if (Config.allowAllItems) return !restrictedItems.contains(stack.getItem());
+        return allowedItemPredicates.stream().anyMatch(p -> p.test(stack));
     }
 
 

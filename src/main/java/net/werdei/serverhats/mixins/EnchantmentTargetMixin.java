@@ -1,6 +1,7 @@
 package net.werdei.serverhats.mixins;
 
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.werdei.serverhats.Config;
 import net.werdei.serverhats.ServerHats;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,6 +20,6 @@ public class EnchantmentTargetMixin
     public void isAcceptableItem(Item item, CallbackInfoReturnable<Boolean> cir)
     {
         if (!Config.enchanting) return;
-        cir.setReturnValue(cir.getReturnValue() || ServerHats.isItemAllowed(item));
+        cir.setReturnValue(cir.getReturnValue() || ServerHats.isItemAllowed(new ItemStack(item)));
     }
 }

@@ -15,7 +15,7 @@ public class MobEntityMixin
     @ModifyVariable(method = "tryEquip", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/mob/MobEntity;getPreferredEquipmentSlot(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/entity/EquipmentSlot;"))
     public EquipmentSlot preventMobsEquippingHats(EquipmentSlot equipmentSlot, ItemStack stack)
     {
-        if (!Config.mobsCanEquipHats && equipmentSlot == EquipmentSlot.HEAD && ServerHats.isItemAllowed(stack.getItem()))
+        if (!Config.mobsCanEquipHats && equipmentSlot == EquipmentSlot.HEAD && ServerHats.isItemAllowed(stack))
             return EquipmentSlot.MAINHAND;
         else
             return equipmentSlot;

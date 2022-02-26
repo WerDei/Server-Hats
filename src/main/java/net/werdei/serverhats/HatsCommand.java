@@ -2,21 +2,9 @@ package net.werdei.serverhats;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
-import net.minecraft.command.argument.ItemPredicateArgumentType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.tag.Tag;
 import net.minecraft.text.LiteralText;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.werdei.serverhats.mixins.ItemPredicateArgumentType.ItemPredicateAccessor;
-import net.werdei.serverhats.mixins.ItemPredicateArgumentType.TagPredicateAccessor;
-import net.werdei.serverhats.utils.Tags;
-
-import java.util.List;
-import java.util.function.Predicate;
 
 public class HatsCommand
 {
@@ -42,6 +30,7 @@ public class HatsCommand
             }
         }
 
+        /*
         var allowedItemsArgument = CommandManager.literal("allowedItems");
         String argumentName = "item or item tag";
         allowedItemsArgument.then(CommandManager.literal("add").then(CommandManager.argument(argumentName, ItemPredicateArgumentType.itemPredicate()).executes((context ->
@@ -51,6 +40,8 @@ public class HatsCommand
         allowedItemsArgument.executes(context ->
                 getArrayConfigValue(context.getSource(), "allowedItems"));
         rootArgument.then(allowedItemsArgument);
+
+         */
 
         var command = dispatcher.register(rootArgument);
         dispatcher.register(CommandManager.literal("serverhats").redirect(command));
@@ -132,6 +123,7 @@ public class HatsCommand
         }
     }
 
+    /*
     private static int allowItems(ServerCommandSource source, Predicate<ItemStack> itemPredicate)
     {
         if (Config.allowAllItems)
@@ -182,24 +174,5 @@ public class HatsCommand
         }
     }
 
-
-    private static PredicateExtraction extractItems(Predicate<ItemStack> itemPredicate)
-    {
-        try
-        {
-            Tag<Item> tag = ((TagPredicateAccessor) itemPredicate).getTag();
-            return new PredicateExtraction(tag.values(), Tags.getItemTagId(tag), true);
-        }
-        catch (Exception ignored)
-        {
-            var item = ((ItemPredicateAccessor) itemPredicate).getItem();
-            return new PredicateExtraction(List.of(item), Registry.ITEM.getId(item), false);
-        }
-    }
-
-    private record PredicateExtraction(
-        List<Item> items,
-        Identifier id,
-        boolean isTag
-    ){}
+     */
 }

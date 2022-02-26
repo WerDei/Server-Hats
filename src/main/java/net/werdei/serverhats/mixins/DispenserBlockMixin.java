@@ -29,7 +29,7 @@ public class DispenserBlockMixin
     {
         if (DEFAULT_BEHAVIOUR == null)
             setupDefaultBehaviour();
-        if (Config.dispenserEquipping && ServerHats.isItemAllowed(stack.getItem()) && cir.getReturnValue() == DEFAULT_BEHAVIOUR)
+        if (Config.dispenserEquipping && ServerHats.isItemAllowed(stack) && cir.getReturnValue() == DEFAULT_BEHAVIOUR)
             cir.setReturnValue(ArmorItem.DISPENSER_BEHAVIOR);
     }
 

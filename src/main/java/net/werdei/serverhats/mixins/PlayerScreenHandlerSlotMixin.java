@@ -20,7 +20,7 @@ public class PlayerScreenHandlerSlotMixin
     @Inject(method = "canInsert(Lnet/minecraft/item/ItemStack;)Z", at = @At("RETURN"), cancellable = true)
     public void allowItemEquipping(ItemStack stack, CallbackInfoReturnable<Boolean> cir)
     {
-        if (field_7834 != EquipmentSlot.HEAD || !ServerHats.isItemAllowed(stack.getItem())) return;
+        if (field_7834 != EquipmentSlot.HEAD || !ServerHats.isItemAllowed(stack)) return;
             cir.setReturnValue(true);
     }
 }

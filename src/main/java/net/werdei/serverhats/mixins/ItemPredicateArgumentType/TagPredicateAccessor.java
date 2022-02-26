@@ -1,7 +1,7 @@
 package net.werdei.serverhats.mixins.ItemPredicateArgumentType;
 
 import net.minecraft.item.Item;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -9,5 +9,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface TagPredicateAccessor
 {
     @Accessor
-    Tag<Item> getTag();
+    TagKey<Item> getTag();
 }
