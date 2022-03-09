@@ -1,3 +1,5 @@
+Download: [Curseforge](https://www.curseforge.com/minecraft/mc-mods/server-hats)/[Modrinth](https://modrinth.com/mod/server-hats)
+
 # Server Hats
 Server-side Fabric mod that allows players equip items as hats.  
 To equip an allowed item, simply put it in the helmet slot - no commands necessary!  
