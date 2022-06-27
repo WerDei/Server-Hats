@@ -3,20 +3,20 @@ package net.werdei.serverhats;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.minecraft.command.argument.ItemPredicateArgumentType;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.command.CommandRegistryWrapper;
+import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.registry.Registry;
+import net.werdei.serverhats.command.HatsCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.function.Predicate;
 
 @SuppressWarnings("FieldMayBeFinal")
 public class ServerHats implements ModInitializer
@@ -24,14 +24,20 @@ public class ServerHats implements ModInitializer
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String LOG_PREFIX = "[ServerHats]: ";
 
-    private static ArrayList<Predicate<ItemStack>> allowedItemPredicates = null;
+    private static HashSet<Item> allowedItems = null;
     private static HashSet<Item> restrictedItems = null;
     private static boolean itemListsInitialized = false;
+    private static CommandRegistryWrapper<Item> registryWrapper;
 
     @Override
     public void onInitialize()
     {
-        CommandRegistrationCallback.EVENT.register(((dispatcher, dedicated) -> HatsCommand.register(dispatcher)));
+
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) ->
+        {
+            HatsCommand.register(dispatcher, registryAccess);
+            registryWrapper = registryAccess.createWrapper(Registry.ITEM_KEY);
+        }));
     }
 
     public static void reloadConfig()
@@ -41,6 +47,9 @@ public class ServerHats implements ModInitializer
 
     public static void reloadConfig(OnOutput info, OnOutput warning)
     {
+        if (registryWrapper == null)
+            ServerHats.warn("ORDER LUL");
+
         if (info == null) info = ServerHats::log;
         if (warning == null) warning = ServerHats::warn;
 
@@ -49,14 +58,14 @@ public class ServerHats implements ModInitializer
 
         recalculateItemLists(info, warning);
 
-        String itemCount = Config.allowAllItems ? "all" : Integer.toString(allowedItemPredicates.size());
+        String itemCount = Config.allowAllItems ? "all" : Integer.toString(allowedItems.size());
         info.sendMessage("Successfully added ability to equip " + itemCount + " items");
     }
 
     public static void recalculateItemLists(OnOutput info, OnOutput warning)
     {
         itemListsInitialized = false;
-        allowedItemPredicates = new ArrayList<>();
+        allowedItems = new HashSet<>();
 
         if (restrictedItems == null)
         {
@@ -68,12 +77,12 @@ public class ServerHats implements ModInitializer
 
         List.of(Config.allowedItems).forEach(string ->
         {
-            StringReader reader = new StringReader(string);
-            var itemPredicateArgumentType = new ItemPredicateArgumentType();
             try
             {
-                var itemPredicate = itemPredicateArgumentType.parse(reader).create(null);
-                addAllowedItemPredicate(itemPredicate);
+                var either = ItemStringReader.itemOrTag(registryWrapper, new StringReader(string));
+
+                either.ifLeft(itemResult -> addAllowedItem(itemResult.item().value(), warning));
+                either.ifRight(tagResult -> tagResult.tag().forEach(item -> addAllowedItem(item.value(), warning)));
             }
             catch (CommandSyntaxException e)
             {
@@ -83,16 +92,19 @@ public class ServerHats implements ModInitializer
         itemListsInitialized = true;
     }
 
-    private static void addAllowedItemPredicate(Predicate<ItemStack> predicate)
+    private static void addAllowedItem(Item item, OnOutput warning)
     {
-        allowedItemPredicates.add(predicate);
+        if (restrictedItems.contains(item))
+            warning.sendMessage("Skipping \"" + item.getName() + "\": The item can already be equipped in a helmet slot");
+        else
+            allowedItems.add(item);
     }
 
     public static boolean isItemAllowed(ItemStack stack)
     {
         if (!itemListsInitialized) return false;
         if (Config.allowAllItems) return !restrictedItems.contains(stack.getItem());
-        return allowedItemPredicates.stream().anyMatch(p -> p.test(stack));
+        return allowedItems.contains(stack.getItem());
     }
 
 

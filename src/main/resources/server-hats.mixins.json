@@ -10,9 +10,7 @@
     "MinecraftServerMixin",
     "MobEntityMixin",
     "PlayerScreenHandlerMixin",
-    "PlayerScreenHandlerSlotMixin",
-    "ItemPredicateArgumentType.ItemPredicateAccessor",
-    "ItemPredicateArgumentType.TagPredicateAccessor"
+    "PlayerScreenHandlerSlotMixin"
   ],
   "client": [
   ],
