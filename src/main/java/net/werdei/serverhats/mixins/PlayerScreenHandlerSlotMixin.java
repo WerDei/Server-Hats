@@ -21,6 +21,6 @@ public class PlayerScreenHandlerSlotMixin
     public void allowItemEquipping(ItemStack stack, CallbackInfoReturnable<Boolean> cir)
     {
         if (field_7834 != EquipmentSlot.HEAD || !ServerHats.isItemAllowed(stack)) return;
-            cir.setReturnValue(true);
+        cir.setReturnValue(true);
     }
 }

@@ -47,9 +47,6 @@ public class ServerHats implements ModInitializer
 
     public static void reloadConfig(OnOutput info, OnOutput warning)
     {
-        if (registryWrapper == null)
-            ServerHats.warn("ORDER LUL");
-
         if (info == null) info = ServerHats::log;
         if (warning == null) warning = ServerHats::warn;
 

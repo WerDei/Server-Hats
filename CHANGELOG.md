@@ -1,3 +1,1 @@
-* 1.19 support
-
-Known issue: when editing allowedItems with a command, no item/tag suggestions will be shown
+* You can now put allowed hat items into an armor stand hand - to do this, click anywhere below its head
