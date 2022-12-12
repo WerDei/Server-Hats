@@ -25,7 +25,7 @@ public class DispenserBlockMixin
     private static DispenserBehavior DEFAULT_BEHAVIOUR = null;
 
     @Inject(method = "getBehaviorForItem", at = @At("RETURN"), cancellable = true)
-    protected void dispenserEquip(ItemStack stack, CallbackInfoReturnable<DispenserBehavior> cir)
+    protected void allowDispenserEquipping(ItemStack stack, CallbackInfoReturnable<DispenserBehavior> cir)
     {
         if (DEFAULT_BEHAVIOUR == null)
             setupDefaultBehaviour();

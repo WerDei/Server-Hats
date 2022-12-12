@@ -13,10 +13,10 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public class MobEntityMixin
 {
     @ModifyVariable(method = "getSlotToEquip", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/mob/MobEntity;getPreferredEquipmentSlot(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/entity/EquipmentSlot;"))
-    public EquipmentSlot preventMobsEquippingHats(EquipmentSlot equipmentSlot, ItemStack stack)
+    private EquipmentSlot allowMobsToEquipHats(EquipmentSlot equipmentSlot, ItemStack stack)
     {
-        if (!Config.mobsCanEquipHats && equipmentSlot == EquipmentSlot.HEAD && ServerHats.isItemAllowed(stack))
-            return EquipmentSlot.MAINHAND;
+        if (Config.mobsCanEquipHats && ServerHats.isItemAllowed(stack))
+            return EquipmentSlot.HEAD;
         else
             return equipmentSlot;
     }

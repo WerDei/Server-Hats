@@ -25,7 +25,6 @@ public class ServerHats implements ModInitializer
     private static final String LOG_PREFIX = "[ServerHats]: ";
 
     private static HashSet<Item> allowedItems = null;
-    private static HashSet<Item> restrictedItems = null;
     private static boolean itemListsInitialized = false;
     private static RegistryWrapper<Item> itemRegistryWrapper;
 
@@ -64,14 +63,6 @@ public class ServerHats implements ModInitializer
         itemListsInitialized = false;
         allowedItems = new HashSet<>();
 
-        if (restrictedItems == null)
-        {
-            restrictedItems = new HashSet<>();
-            itemRegistryWrapper.streamEntries()
-                    .filter(item -> LivingEntity.getPreferredEquipmentSlot(new ItemStack(item)) == EquipmentSlot.HEAD)
-                    .forEach(item -> restrictedItems.add(item.value()));
-        }
-
         List.of(Config.allowedItems).forEach(string ->
         {
             try
@@ -91,7 +82,7 @@ public class ServerHats implements ModInitializer
 
     private static void addAllowedItem(Item item, OnOutput warning)
     {
-        if (restrictedItems.contains(item))
+        if (isItemRestricted(item))
             warning.sendMessage("Skipping \"" + item.getName() + "\": The item can already be equipped in a helmet slot");
         else
             allowedItems.add(item);
@@ -100,8 +91,18 @@ public class ServerHats implements ModInitializer
     public static boolean isItemAllowed(ItemStack stack)
     {
         if (!itemListsInitialized) return false;
-        if (Config.allowAllItems) return !restrictedItems.contains(stack.getItem());
+        if (Config.allowAllItems) return !isItemRestricted(stack);
         return allowedItems.contains(stack.getItem());
+    }
+
+    private static boolean isItemRestricted(Item item)
+    {
+        return isItemRestricted(new ItemStack(item));
+    }
+
+    private static boolean isItemRestricted(ItemStack stack)
+    {
+        return LivingEntity.getPreferredEquipmentSlot(stack) == EquipmentSlot.HEAD;
     }
 
 

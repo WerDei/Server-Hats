@@ -15,22 +15,15 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public abstract class ArmorStandEntityMixin
 {
     @Shadow
-    protected abstract EquipmentSlot getSlotFromPosition(Vec3d hitPos);
-
-    @Shadow
-    protected abstract boolean isSlotDisabled(EquipmentSlot slot);
-
-    @Shadow
     public abstract boolean isSmall();
 
 
     @ModifyVariable(method = "interactAt", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/mob/MobEntity;getPreferredEquipmentSlot(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/entity/EquipmentSlot;"))
-    public EquipmentSlot undoSubstitution(EquipmentSlot equipmentSlot, PlayerEntity player, Vec3d hitPos, Hand hand)
+    public EquipmentSlot equipHatsToArmorStands(EquipmentSlot equipmentSlot, PlayerEntity player, Vec3d hitPos, Hand hand)
     {
-        // Cancel the slot substitution when not looking at an armor stand head
-        if (equipmentSlot == EquipmentSlot.HEAD && ServerHats.isItemAllowed(player.getStackInHand(hand))
-                && !isLookingAtAHead(hitPos) && !isSlotDisabled(EquipmentSlot.MAINHAND))
-            return EquipmentSlot.MAINHAND;
+        // Equip an armor stand with a hat when looking at its head
+        if (ServerHats.isItemAllowed(player.getStackInHand(hand)) && isLookingAtAHead(hitPos))
+            return EquipmentSlot.HEAD;
         else
             return equipmentSlot;
     }
