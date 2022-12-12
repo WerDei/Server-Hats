@@ -4,13 +4,13 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.command.CommandRegistryWrapper;
 import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.RegistryWrapper;
 import net.werdei.serverhats.command.HatsCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +27,7 @@ public class ServerHats implements ModInitializer
     private static HashSet<Item> allowedItems = null;
     private static HashSet<Item> restrictedItems = null;
     private static boolean itemListsInitialized = false;
-    private static CommandRegistryWrapper<Item> registryWrapper;
+    private static RegistryWrapper<Item> itemRegistryWrapper;
 
     @Override
     public void onInitialize()
@@ -36,7 +36,7 @@ public class ServerHats implements ModInitializer
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) ->
         {
             HatsCommand.register(dispatcher, registryAccess);
-            registryWrapper = registryAccess.createWrapper(Registry.ITEM_KEY);
+            itemRegistryWrapper = registryAccess.createWrapper(RegistryKeys.ITEM);
         }));
     }
 
@@ -67,16 +67,16 @@ public class ServerHats implements ModInitializer
         if (restrictedItems == null)
         {
             restrictedItems = new HashSet<>();
-            Registry.ITEM.stream()
+            itemRegistryWrapper.streamEntries()
                     .filter(item -> LivingEntity.getPreferredEquipmentSlot(new ItemStack(item)) == EquipmentSlot.HEAD)
-                    .forEach(item -> restrictedItems.add(item));
+                    .forEach(item -> restrictedItems.add(item.value()));
         }
 
         List.of(Config.allowedItems).forEach(string ->
         {
             try
             {
-                var either = ItemStringReader.itemOrTag(registryWrapper, new StringReader(string));
+                var either = ItemStringReader.itemOrTag(itemRegistryWrapper, new StringReader(string));
 
                 either.ifLeft(itemResult -> addAllowedItem(itemResult.item().value(), warning));
                 either.ifRight(tagResult -> tagResult.tag().forEach(item -> addAllowedItem(item.value(), warning)));

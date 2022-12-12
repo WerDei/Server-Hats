@@ -5,22 +5,22 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.command.CommandRegistryWrapper;
 import net.minecraft.item.Item;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import net.minecraft.util.registry.Registry;
 import net.werdei.serverhats.Config;
 import net.werdei.serverhats.ServerHats;
 
 public class HatsCommand
 {
-    private static CommandRegistryWrapper<Item> registryWrapper;
+    private static RegistryWrapper<Item> itemRegistryWrapper;
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess)
     {
-        registryWrapper = commandRegistryAccess.createWrapper(Registry.ITEM_KEY);
+        itemRegistryWrapper = commandRegistryAccess.createWrapper(RegistryKeys.ITEM);
 
         var rootArgument = CommandManager.literal("hats").requires(source ->
                 source.hasPermissionLevel(2)
@@ -140,7 +140,7 @@ public class HatsCommand
             return 0;
         }
 
-        var itemPredicate = ItemPredicateIdentifier.fromString(string, registryWrapper);
+        var itemPredicate = ItemPredicateIdentifier.fromString(string, itemRegistryWrapper);
 
         if (Config.addAllowedItemId(itemPredicate.id, itemPredicate.isTag))
         {
@@ -165,7 +165,7 @@ public class HatsCommand
             return 0;
         }
 
-        var itemPredicate = ItemPredicateIdentifier.fromString(string, registryWrapper);
+        var itemPredicate = ItemPredicateIdentifier.fromString(string, itemRegistryWrapper);
 
         if (Config.removeAllowedItemId(itemPredicate.id, itemPredicate.isTag))
         {
