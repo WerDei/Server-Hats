@@ -4,7 +4,6 @@
   "package": "net.werdei.serverhats.mixins",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "ArmorItemMixin",
     "ArmorStandEntityMixin",
     "DispenserBlockMixin",
     "EnchantmentTargetMixin",
