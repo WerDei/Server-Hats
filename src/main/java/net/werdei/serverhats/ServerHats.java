@@ -4,13 +4,13 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.command.CommandRegistryWrapper;
 import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.util.registry.Registry;
 import net.werdei.serverhats.command.HatsCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,7 +26,7 @@ public class ServerHats implements ModInitializer
 
     private static HashSet<Item> allowedItems = null;
     private static boolean itemListsInitialized = false;
-    private static RegistryWrapper<Item> itemRegistryWrapper;
+    private static CommandRegistryWrapper<Item> itemRegistryWrapper;
 
     @Override
     public void onInitialize()
@@ -35,7 +35,7 @@ public class ServerHats implements ModInitializer
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) ->
         {
             HatsCommand.register(dispatcher, registryAccess);
-            itemRegistryWrapper = registryAccess.createWrapper(RegistryKeys.ITEM);
+            itemRegistryWrapper = registryAccess.createWrapper(Registry.ITEM_KEY);
         }));
     }
 

@@ -5,22 +5,22 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.CommandRegistryWrapper;
 import net.minecraft.item.Item;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
+import net.minecraft.util.registry.Registry;
 import net.werdei.serverhats.Config;
 import net.werdei.serverhats.ServerHats;
 
 public class HatsCommand
 {
-    private static RegistryWrapper<Item> itemRegistryWrapper;
+    private static CommandRegistryWrapper<Item> itemRegistryWrapper;
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess)
     {
-        itemRegistryWrapper = commandRegistryAccess.createWrapper(RegistryKeys.ITEM);
+        itemRegistryWrapper = commandRegistryAccess.createWrapper(Registry.ITEM_KEY);
 
         var rootArgument = CommandManager.literal("hats").requires(source ->
                 source.hasPermissionLevel(2)

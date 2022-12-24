@@ -20,7 +20,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler
         super(type, syncId);
     }
 
-    @ModifyVariable(method = "quickMove",
+    @ModifyVariable(method = "transferSlot",
             at = @At(
                     value = "INVOKE_ASSIGN",
                     target = "Lnet/minecraft/entity/mob/MobEntity;getPreferredEquipmentSlot(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/entity/EquipmentSlot;"))
