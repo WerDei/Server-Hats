@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(targets = {
         "net/minecraft/enchantment/EnchantmentTarget$4",  // WEARABLE (don't believe the intellij extension, correct order is from bytecode)
         "net/minecraft/enchantment/EnchantmentTarget$6",  // VANISHABLE
-        "net/minecraft/enchantment/EnchantmentTarget$10"  // ARMOR_HEAD
 })
 public class EnchantmentTargetMixin
 {
