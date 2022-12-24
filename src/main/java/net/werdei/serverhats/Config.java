@@ -12,7 +12,7 @@ public class Config
 
     public static boolean dispenserEquipping = true;
 
-    public static boolean enchanting = false;
+    public static boolean enchanting = true;
 
     public static boolean mobsCanEquipHats = false;
 
