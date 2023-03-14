@@ -1,1 +1,1 @@
-* Fixed dispenser functionality, again
+* Updated to 1.19.4

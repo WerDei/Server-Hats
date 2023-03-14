@@ -1,7 +1,7 @@
 plugins {
     id 'fabric-loom' version '0.12-SNAPSHOT'
     id 'maven-publish'
-    id "com.modrinth.minotaur" version "1.2.1"
+    id "com.modrinth.minotaur" version "2.7.4"
     id "net.darkhax.curseforgegradle" version "1.0.11"
 }
 
@@ -60,29 +60,32 @@ jar {
 
 // Mod publishing
 
-import com.modrinth.minotaur.TaskModrinthUpload
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
 def versionDisplayName = project.mod_name + ' - ' + project.version
-def supportedMinecraftVersions = project.mod_supported_minecraft_versions.split(',')
+def supportedMinecraftVersions = project.mod_supported_minecraft_versions.split(',').toList()
 def changelogText = new File('./CHANGELOG.md').text
 
-
-task modrinth (type: TaskModrinthUpload)
+modrinth
 {
     group 'upload'
     token = project.modrinth_token // saved in user home
     projectId = project.modrinth_mod_id
     versionName = versionDisplayName
     versionNumber = project.version
-    for (ver in supportedMinecraftVersions) {
-        addGameVersion(ver)
-    }
     versionType = project.mod_version_type
+
+    gameVersions = supportedMinecraftVersions
+    loaders = ["fabric", "quilt"]
     changelog = changelogText
+    dependencies
+    {
+        required.project "fabric-api"
+    }
+
     uploadFile = remapJar
-    addLoader('fabric')
 }
+
 
 task curseforge(type: TaskPublishCurseForge)
 {
@@ -96,6 +99,7 @@ task curseforge(type: TaskPublishCurseForge)
     mainFile.releaseType = project.mod_version_type
     mainFile.displayName = versionDisplayName
     mainFile.addModLoader('Fabric')
+    mainFile.addModLoader('Quilt')
     for (ver in supportedMinecraftVersions)
     {
         mainFile.addGameVersion(ver)
