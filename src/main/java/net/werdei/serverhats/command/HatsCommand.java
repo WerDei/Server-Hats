@@ -61,7 +61,7 @@ public class HatsCommand
         try
         {
             ServerHats.reloadConfig(
-                    s -> source.sendFeedback(Text.literal(s), true),
+                    s -> source.sendFeedback(() -> Text.literal(s), true),
                     s -> source.sendError(Text.literal(s)));
         }
         catch (Exception e)
@@ -83,7 +83,7 @@ public class HatsCommand
                 return 0;
             }
             field.setBoolean(null, value);
-            source.sendFeedback(Text.literal(name + " is now set to " + value), true);
+            source.sendFeedback(() -> Text.literal(name + " is now set to " + value), true);
 
             Config.save();
             return value ? 2 : 1;
@@ -98,8 +98,8 @@ public class HatsCommand
     {
         try
         {
-            var field = Config.class.getField(name);
-            source.sendFeedback(Text.literal(name + " is currently set to " + field.get(null)), true);
+            var field = Config.class.getField(name).get(null);
+            source.sendFeedback(() -> Text.literal(name + " is currently set to " + field), true);
             return 1;
         }
         catch (Exception e)
@@ -114,7 +114,7 @@ public class HatsCommand
         {
             var field = Config.class.getField(name);
             var array = (Object[]) field.get(null);
-            source.sendFeedback(Text.literal(name + " currently contains: "), true);
+            source.sendFeedback(() -> Text.literal(name + " currently contains: "), true);
             StringBuilder contents = new StringBuilder();
             boolean first = true;
             for (var obj : array)
@@ -123,7 +123,7 @@ public class HatsCommand
                 first = false;
                 contents.append(obj.toString());
             }
-            source.sendFeedback(Text.literal(contents.toString()), true);
+            source.sendFeedback(() -> Text.literal(contents.toString()), true);
             return 1;
         }
         catch (Exception e)
@@ -145,9 +145,9 @@ public class HatsCommand
         if (Config.addAllowedItemId(itemPredicate.id, itemPredicate.isTag))
         {
             ServerHats.recalculateItemLists(
-                    s -> source.sendFeedback(Text.literal(s), true),
+                    s -> source.sendFeedback(() -> Text.literal(s), true),
                     s -> source.sendError(Text.literal(s)));
-            source.sendFeedback(Text.literal("Successfully updated allowedItems list"), true);
+            source.sendFeedback(() -> Text.literal("Successfully updated allowedItems list"), true);
             return 1;
         }
         else
@@ -170,9 +170,9 @@ public class HatsCommand
         if (Config.removeAllowedItemId(itemPredicate.id, itemPredicate.isTag))
         {
             ServerHats.recalculateItemLists(
-                    s -> source.sendFeedback(Text.literal(s), true),
+                    s -> source.sendFeedback(() -> Text.literal(s), true),
                     s -> source.sendError(Text.literal(s)));
-            source.sendFeedback(Text.literal("Successfully updated allowedItems list"), true);
+            source.sendFeedback(() -> Text.literal("Successfully updated allowedItems list"), true);
             return 1;
         }
         else
